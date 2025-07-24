@@ -1,0 +1,2 @@
+2025-07-24 22:36:52:admin:4:chicken mushroom_small, 5:margherita_large
+2025-07-24 22:38:30:admin:4:pepperoni_small, 2:mushroom_small

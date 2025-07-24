@@ -18,17 +18,18 @@ ORDERS_FILE = "static/data/orders.txt"
 def load_recipes():
     recipes = {}
     try:
-        with open(RECIPES_FILE) as f:
+        with open('static/data/recipes.txt', 'r') as f:
             for line in f:
                 line = line.strip()
-                if not line or line.startswith("#"):
+                if not line or line.startswith('#'):
                     continue
-                if "#" in line:
-                    name, ingredients = line.split("#", 1)
-                    recipes[name.strip()] = [i.strip() for i in ingredients.split(",")]
+                if ':' in line:
+                    name, ingredients = line.split(':', 1)
+                    recipes[name.strip()] = [i.strip() for i in ingredients.split(',')]
     except FileNotFoundError:
-        pass
+        print("Recipes file not found. Creating empty recipes dictionary.")
     return recipes
+
 
 def save_recipes(recipes):
     with open(RECIPES_FILE, "w") as f:
@@ -99,8 +100,14 @@ def index():
 @app.route('/menu')
 def menu():
     recipes = load_recipes()
-    return render_template("menu.html", recipes=recipes)
+    print("Loaded recipes:", recipes)  # Debug output
+    return render_template('menu.html', recipes=recipes)
 
+# Add other routes as needed...
+
+if __name__ == '__main__':
+    os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+    app.run(debug=True)
 @app.route('/pizza/<pizza_name>')
 def pizza_details(pizza_name):
     recipes = load_recipes()
