@@ -1,34 +1,64 @@
 {% extends "base.html" %}
-{% block title %}Order here{% endblock %}
+{% block title %}Order Pizza - Presto Pizza{% endblock %}
 
 {% block content %}
-<h2>We sell the following pizzas:</h2>
+<h1>Place Your Order</h1>
 
-<form method="post" action="/order">
-    
-    <ul>
-        {% for item in pizza_type %}
-            <li>
-                <strong>{{ item }}</strong><br>
-
-                <!-- Pizza size selection -->
-                <label for="size_{{ item }}">Size:</label>
-                <select name="size_{{ item }}" id="size_{{ item }}">
-                    <option value="small">Small</option>
-                    <option value="medium">Medium</option>
-                    <option value="large">Large</option>    
-                </select><br>
-
-                <!-- Quantity input -->
-                <label for="quantity_{{ item }}">Quantity:</label>
-                <input type="number" id="quantity_{{ item }}" name="quantity_{{ item }}" min="1" max="10" step="1" placeholder="Enter a number"><br><br>
+<form method="post" action="{{ url_for('order') }}" class="order-form">
+    <div class="grid">
+        {% for pizza in pizzas.keys() %}
+        <div class="card">
+            <img src="{{ url_for('static', filename='uploads/pizza_' + pizza.lower().replace(' ', '_') + '.jpg') }}" 
+                 alt="{{ pizza }}" class="card-img">
+            <div class="card-body">
+                <h3 class="card-title">{{ pizza }}</h3>
                 
-            </li>
+                <div class="form-group">
+                    <label for="size_{{ pizza }}">Size:</label>
+                    <select name="size_{{ pizza }}" id="size_{{ pizza }}" class="form-control">
+                        <option value="small">Small ($12.99)</option>
+                        <option value="medium" selected>Medium ($15.99)</option>
+                        <option value="large">Large ($19.99)</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="quantity_{{ pizza }}">Quantity:</label>
+                    <input type="number" name="quantity_{{ pizza }}" id="quantity_{{ pizza }}" 
+                           class="form-control" min="0" max="10" value="0">
+                </div>
+            </div>
+        </div>
         {% endfor %}
-    </ul>
-     <button>add to cart</button>
-      <a href="/basket">View cart</a>
+    </div>
     
-
+    <div class="form-actions">
+        <button type="submit" class="btn">Place Order</button>
+        <a href="{{ url_for('menu') }}" class="btn btn-outline">Back to Menu</a>
+    </div>
 </form>
+
+<style>
+    .order-form {
+        margin-top: 30px;
+    }
+    
+    .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 20px;
+    }
+    
+    .btn-outline {
+        background-color: transparent;
+        border: 1px solid var(--primary-color);
+        color: var(--primary-color);
+    }
+    
+    .btn-outline:hover {
+        background-color: var(--primary-color);
+        color: white;
+    }
+</style>
 {% endblock %}

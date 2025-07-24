@@ -1,16 +1,40 @@
 {% extends "base.html" %}
-{% block title %}Register{% endblock %}
+{% block title %}Register - Presto Pizza{% endblock %}
+
 {% block content %}
-Register for an account
-    {% if message %}<b>{{ message }}</b>{% endif %}
-    <form method="post">
-        <p>username: <input type='text' name='username'></p>
-            <p>password: <input type='password' name='password'></p>
-            <p>confirm password: <input type='password' name='confirm_password'></p>
-            <p>email: <input type='email' name='email'></p>
-            <p><input type=submit value="Register"></p>
-            <p>Already have an account? <a href="/login">Login here</a>.</p>
-            
-    </form>
+<div class="auth-container">
+    <div class="auth-card">
+        <h2>Create Your Account</h2>
         
+        <form method="post" action="{{ url_for('register') }}">
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" name="username" id="username" class="form-control" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" name="password" id="password" class="form-control" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="confirm_password">Confirm Password:</label>
+                <input type="password" name="confirm_password" id="confirm_password" class="form-control" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email (optional):</label>
+                <input type="email" name="email" id="email" class="form-control">
+            </div>
+            
+            <div class="form-group">
+                <button type="submit" class="btn">Register</button>
+            </div>
+            
+            <div class="auth-links">
+                <p>Already have an account? <a href="{{ url_for('login') }}">Login here</a></p>
+            </div>
+        </form>
+    </div>
+</div>
 {% endblock %}

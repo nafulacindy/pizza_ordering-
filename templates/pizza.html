@@ -1,10 +1,96 @@
 {% extends "base.html" %}
-{% block title %}Menu - {{pizza}}{% endblock %}
+{% block title %}{{ pizza }} - Presto Pizza{% endblock %}
+
 {% block content %}
-    This is the page to describe the {{pizza}} pizza.
-    <ul>
-        {% for item in ingredients %}
-            <li>{{ item }}</li>
-        {% endfor %}
-    </ul>
+<div class="pizza-detail">
+    <div class="pizza-image">
+        <img src="{{ url_for('static', filename='uploads/pizza_' + pizza.lower().replace(' ', '_') + '.jpg') }}" 
+             alt="{{ pizza }}"
+             onerror="this.src='{{ C:\Users\cindy\Downloads\templates-again\templates-again\static\images\default-pizza..jpg }}'">
+    </div>
+    <div class="pizza-info">
+        <h1>{{ pizza }}</h1>
+        <p class="price">$12.99 - $19.99</p>
+        
+        <h3>Ingredients:</h3>
+        <ul class="ingredients-list">
+            {% for ingredient in ingredients %}
+            <li>
+                <img src="{{ url_for('static', filename='images/ingredients/' + ingredient.lower().replace(' ', '-') + '.png') }}" 
+                     alt="{{ ingredient }}">
+                <span>{{ ingredient }}</span>
+            </li>
+            {% endfor %}
+        </ul>
+        
+        <form action="{{ url_for('order') }}" method="get">
+            <input type="hidden" name="pizza" value="{{ pizza }}">
+            <button type="submit" class="btn">Order Now</button>
+        </form>
+    </div>
+</div>
+
+<style>
+    .pizza-detail {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 30px;
+    }
+    
+    .pizza-image {
+        flex: 1;
+        min-width: 300px;
+    }
+    
+    .pizza-image img {
+        width: 100%;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .pizza-info {
+        flex: 1;
+        min-width: 300px;
+    }
+    
+    .pizza-info h1 {
+        font-size: 2rem;
+        margin-bottom: 10px;
+        color: var(--dark-color);
+    }
+    
+    .price {
+        font-size: 1.2rem;
+        color: var(--primary-color);
+        font-weight: 600;
+        margin-bottom: 20px;
+    }
+    
+    .ingredients-list {
+        list-style: none;
+        margin: 20px 0;
+    }
+    
+    .ingredients-list li {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+        padding: 8px;
+        background-color: #f9f9f9;
+        border-radius: 4px;
+    }
+    
+    .ingredients-list img {
+        width: 30px;
+        height: 30px;
+        margin-right: 10px;
+        object-fit: contain;
+    }
+    
+    @media (max-width: 768px) {
+        .pizza-detail {
+            flex-direction: column;
+        }
+    }
+</style>
 {% endblock %}

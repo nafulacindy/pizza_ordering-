@@ -1,38 +1,134 @@
 {% extends "base.html" %}
-{% block title %}Menu{% endblock %}
+{% block title %}Admin Dashboard - Presto Pizza{% endblock %}
 
 {% block content %}
-<h2>We sell the following pizzas:</h2>
+<h1>Admin Dashboard</h1>
 
-<table border="1" cellpadding="10" cellspacing="0">
-    <thead>
-        <tr>
-            <th>Pizza Name</th>
-            <th>Ingredients</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
+<div class="admin-tabs">
+    <button class="tab-btn active" onclick="openTab('orders')">Orders</button>
+    <button class="tab-btn" onclick="openTab('pizzas')">Pizzas</button>
+    <button class="tab-btn" onclick="openTab('ingredients')">Ingredients</button>
+</div>
+
+<div id="orders" class="tab-content active">
+    <h2>Recent Orders</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Time</th>
+                <th>Customer</th>
+                <th>Order Details</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td>{{ order.timestamp }}</td>
+                <td>{{ order.username }}</td>
+                <td>{{ order.details }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div id="pizzas" class="tab-content">
+    <h2>Pizza Menu Management</h2>
+    <a href="{{ url_for('add_pizza') }}" class="btn">Add New Pizza</a>
+    
+    <div class="grid" style="margin-top: 20px;">
         {% for pizza, ingredients in recipes.items() %}
-        <tr>
-            <td><strong>{{ pizza }}</strong></td>
-            <td>
-                {% for ingredient in ingredients %}
-                    {{ ingredient }}{% if not loop.last %}, {% endif %}
-                {% endfor %}
-            </td>
-            <td>
-                <a href="{{ url_for('edit_pizza', pizza_name=pizza) }}">Edit</a> |
-                <a href="{{ url_for('delete_pizza', pizza_name=pizza) }}" onclick="return confirm('Are you sure you want to delete {{ pizza }}?')">Delete</a>
-            </td>
-        </tr>
+        <div class="card">
+            <img src="{{ url_for('static', filename='uploads/pizza_' + pizza.lower().replace(' ', '_') + '.jpg') }}" 
+                 alt="{{ pizza }}" class="card-img"
+                 onerror="this.src='{{C:\Users\cindy\Downloads\templates-again\templates-again\static\images\default-pizza..jpg }}'">
+            <div class="card-body">
+                <h3 class="card-title">{{ pizza }}</h3>
+                <p class="card-text">
+                    {% for ingredient in ingredients %}
+                        <span class="ingredient-tag">{{ ingredient }}</span>
+                    {% endfor %}
+                </p>
+                <div class="card-actions">
+                    <a href="{{ url_for('edit_pizza', pizza_name=pizza) }}" class="btn">Edit</a>
+                    <form action="{{ url_for('delete_pizza', pizza_name=pizza) }}" method="post" style="display: inline;">
+                        <button type="submit" class="btn" style="background-color: var(--danger-color);" 
+                                onclick="return confirm('Are you sure you want to delete {{ pizza }}?')">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
         {% endfor %}
-    </tbody>
-</table>
+    </div>
+</div>
 
-<br>
-<a href="{{ url_for('add_pizza') }}">
-    <button>Add New Pizza</button>
-</a>
+<div id="ingredients" class="tab-content">
+    <h2>Ingredients Needed</h2>
+    <p>Based on all current orders</p>
+    
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Ingredient</th>
+                <th>Quantity Needed</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ingredient, quantity in ingredient_counts.items() %}
+            <tr>
+                <td>{{ ingredient }}</td>
+                <td>{{ quantity }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 
+<style>
+    .admin-tabs {
+        display: flex;
+        border-bottom: 1px solid #ddd;
+        margin-bottom: 20px;
+    }
+    
+    .tab-btn {
+        padding: 10px 20px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 1rem;
+        border-bottom: 3px solid transparent;
+    }
+    
+    .tab-btn.active {
+        border-bottom-color: var(--primary-color);
+        font-weight: 500;
+    }
+    
+    .tab-content {
+        display: none;
+    }
+    
+    .tab-content.active {
+        display: block;
+    }
+</style>
+
+<script>
+    function openTab(tabId) {
+        // Hide all tab contents
+        document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.remove('active');
+        });
+        
+        // Show the selected tab content
+        document.getElementById(tabId).classList.add('active');
+        
+        // Update active tab button
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        event.currentTarget.classList.add('active');
+    }
+</script>
 {% endblock %}

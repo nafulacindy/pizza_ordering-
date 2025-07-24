@@ -1,9 +1,29 @@
 {% extends "base.html" %}
+{% block title %}Add Pizza - Presto Pizza{% endblock %}
+
 {% block content %}
-<h2>Add New Pizza</h2>
-<form method="POST">
-    <label>Pizza Name: <input type="text" name="name" required></label><br><br>
-    <label>Ingredients (comma separated): <input type="text" name="ingredients" required></label><br><br>
-    <button type="submit">Add Pizza</button>
+<h1>Add New Pizza</h1>
+
+<form method="post" action="{{ url_for('add_pizza') }}" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="name">Pizza Name:</label>
+        <input type="text" name="name" id="name" class="form-control" required>
+    </div>
+    
+    <div class="form-group">
+        <label for="ingredients">Ingredients (comma separated):</label>
+        <input type="text" name="ingredients" id="ingredients" class="form-control" required>
+        <small>Example: Tomato sauce, Mozzarella, Pepperoni, Mushrooms</small>
+    </div>
+    
+    <div class="form-group">
+        <label for="image">Pizza Image:</label>
+        <input type="file" name="image" id="image" class="form-control" accept="image/*">
+    </div>
+    
+    <div class="form-actions">
+        <button type="submit" class="btn">Add Pizza</button>
+        <a href="{{ url_for('admin') }}" class="btn btn-outline">Cancel</a>
+    </div>
 </form>
 {% endblock %}
