@@ -30,11 +30,12 @@ def load_recipes():
         print("Recipes file not found. Creating empty recipes dictionary.")
     return recipes
 
-
 def save_recipes(recipes):
+    """Save all recipes to file using consistent separator"""
     with open(RECIPES_FILE, "w") as f:
         for name, ingredients in recipes.items():
-            f.write(f"{name}#{','.join(ingredients)}\n")
+            # Use colon (:) as separator to match loading format
+            f.write(f"{name}:{','.join(ingredients)}\n")
 
 def load_users():
     users = {}
@@ -55,31 +56,46 @@ def save_users(users):
         for username, password in users.items():
             f.write(f"{username}:{password}\n")
 
-def load_orders():
+def save_order(username, order_details):
+    """Save order to the orders file with timestamp"""
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    with open(ORDERS_FILE, 'a') as f:
+        f.write(f"{timestamp}:{username}:{order_details}\n")
+
+def load_user_orders(username):
+    """Load all orders for a specific user"""
     orders = []
     try:
-        with open(ORDERS_FILE) as f:
+        with open(ORDERS_FILE, 'r') as f:
             for line in f:
-                line = line.strip()
-                if not line or ":" not in line:
-                    continue
-                parts = line.split(":", 2)
-                if len(parts) == 3:
-                    timestamp, username, order_details = parts
+                parts = line.strip().split(':', 2)
+                if len(parts) == 3 and parts[1] == username:
                     orders.append({
-                        'timestamp': timestamp,
-                        'username': username.strip(),
-                        'details': order_details.strip()
+                        'timestamp': parts[0],
+                        'details': parts[2]
                     })
+        # Return orders in reverse chronological order (newest first)
+        return sorted(orders, key=lambda x: x['timestamp'], reverse=True)
     except FileNotFoundError:
-        pass
-    return orders
-
-def save_orders(orders):
-    with open(ORDERS_FILE, "w") as f:
-        for order in orders:
-            f.write(f"{order['timestamp']}:{order['username']}:{order['details']}\n")
-
+        return []
+def load_orders():
+    """Load all orders from the orders file"""
+    orders = []
+    try:
+        with open(ORDERS_FILE, 'r') as f:
+            for line in f:
+                parts = line.strip().split(':', 2)
+                if len(parts) == 3:
+                    orders.append({
+                        'timestamp': parts[0],
+                        'username': parts[1],
+                        'details': parts[2]
+                    })
+        # Return orders in reverse chronological order (newest first)
+        return sorted(orders, key=lambda x: x['timestamp'], reverse=True)
+    except FileNotFoundError:
+        return []
+    
 def calculate_ingredients(orders, recipes):
     ingredient_counts = {}
     for order in orders:
@@ -119,49 +135,36 @@ def pizza_details(pizza_name):
 @app.route('/order', methods=['GET', 'POST'])
 def order():
     if 'username' not in session:
-        flash("Please login to place an order", "warning")
         return redirect(url_for('login'))
     
     recipes = load_recipes()
     
     if request.method == 'POST':
-        cart = {}
-        for pizza in recipes:
-            quantity = request.form.get(f'quantity_{pizza}', 0)
-            size = request.form.get(f'size_{pizza}', 'medium')
+        order_details = []
+        for pizza_name in recipes:
+            quantity = request.form.get(f'quantity_{pizza_name}', '0').strip()
             try:
                 quantity = int(quantity)
                 if quantity > 0:
-                    cart[f"{pizza}_{size}"] = quantity
+                    size = request.form.get(f'size_{pizza_name}', 'medium')
+                    order_details.append(f"{quantity}x {pizza_name} ({size})")
             except ValueError:
                 continue
         
-        if cart:
-            # Save order
-            orders = load_orders()
-            order_details = ", ".join([f"{qty}:{item}" for item, qty in cart.items()])
-            orders.append({
-                'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                'username': session['username'],
-                'details': order_details
-            })
-            save_orders(orders)
+        if order_details:
+            save_order(session['username'], ", ".join(order_details))
             flash("Order placed successfully!", "success")
             return redirect(url_for('order_history'))
-        else:
-            flash("Please select at least one pizza to order", "warning")
     
-    return render_template("order.html", pizzas=recipes)
+    return render_template('order.html', recipes=recipes)
 
 @app.route('/order/history')
 def order_history():
     if 'username' not in session:
-        flash("Please login to view your order history", "warning")
         return redirect(url_for('login'))
     
-    orders = load_orders()
-    user_orders = [o for o in orders if o['username'] == session['username']]
-    return render_template("order_history.html", orders=user_orders)
+    orders = load_user_orders(session['username'])
+    return render_template('order_history.html', orders=orders)
 
 @app.route('/cart')
 def cart():
@@ -227,7 +230,7 @@ def admin():
         flash("Unauthorized access", "error")
         return redirect(url_for('index'))
     
-    orders = load_orders()
+    orders = load_orders()  # Now using the correct function
     recipes = load_recipes()
     ingredient_counts = calculate_ingredients(orders, recipes)
     
@@ -249,9 +252,9 @@ def add_pizza():
         if not name or not ingredients:
             flash("Please provide both name and ingredients", "error")
         else:
-            recipes = load_recipes()
-            recipes[name] = ingredients
-            save_recipes(recipes)
+            recipes = load_recipes()  # Load existing recipes first
+            recipes[name] = ingredients  # Add new pizza
+            save_recipes(recipes)  # Save all recipes
             
             # Handle image upload
             if 'image' in request.files:
@@ -283,9 +286,13 @@ def edit_pizza(pizza_name):
         if not new_name or not ingredients:
             flash("Please provide both name and ingredients", "error")
         else:
+            # Remove old name if changed
             if new_name != pizza_name:
                 del recipes[pizza_name]
+            # Add/update the pizza
             recipes[new_name] = ingredients
+            print("Current recipes before save:", recipes)  # Before saving
+
             save_recipes(recipes)
             
             # Handle image upload
@@ -296,6 +303,7 @@ def edit_pizza(pizza_name):
                     image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             
             flash("Pizza updated successfully!", "success")
+            print("File content after save:", open(RECIPES_FILE).read())
             return redirect(url_for('admin'))
     
     return render_template("edit_pizza.html", 

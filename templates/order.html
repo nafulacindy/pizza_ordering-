@@ -6,16 +6,17 @@
 
 <form method="post" action="{{ url_for('order') }}" class="order-form">
     <div class="grid">
-        {% for pizza in pizzas.keys() %}
+        {% for pizza_name, ingredients in recipes.items() %}
         <div class="card">
-            <img src="{{ url_for('static', filename='uploads/pizza_' + pizza.lower().replace(' ', '_') + '.jpg') }}" 
-                 alt="{{ pizza }}" class="card-img">
+            <img src="{{ url_for('static', filename='uploads/pizza_' + pizza_name.lower().replace(' ', '_') + '.jpg') }}" 
+                 alt="{{ pizza_name }}" class="card-img"
+                 >
             <div class="card-body">
-                <h3 class="card-title">{{ pizza }}</h3>
+                <h3 class="card-title">{{ pizza_name }}</h3>
                 
                 <div class="form-group">
-                    <label for="size_{{ pizza }}">Size:</label>
-                    <select name="size_{{ pizza }}" id="size_{{ pizza }}" class="form-control">
+                    <label for="size_{{ pizza_name }}">Size:</label>
+                    <select name="size_{{ pizza_name }}" id="size_{{ pizza_name }}" class="form-control">
                         <option value="small">Small ($12.99)</option>
                         <option value="medium" selected>Medium ($15.99)</option>
                         <option value="large">Large ($19.99)</option>
@@ -23,8 +24,8 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="quantity_{{ pizza }}">Quantity:</label>
-                    <input type="number" name="quantity_{{ pizza }}" id="quantity_{{ pizza }}" 
+                    <label for="quantity_{{ pizza_name }}">Quantity:</label>
+                    <input type="number" name="quantity_{{ pizza_name }}" id="quantity_{{ pizza_name }}" 
                            class="form-control" min="0" max="10" value="0">
                 </div>
             </div>
@@ -50,15 +51,62 @@
         margin-top: 20px;
     }
     
+    .btn {
+        padding: 10px 20px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s;
+    }
+    
     .btn-outline {
         background-color: transparent;
-        border: 1px solid var(--primary-color);
-        color: var(--primary-color);
+        border: 1px solid #e74c3c;
+        color: #e74c3c;
     }
     
     .btn-outline:hover {
-        background-color: var(--primary-color);
+        background-color: #e74c3c;
         color: white;
+    }
+    
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 20px;
+    }
+    
+    .card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+    
+    .card-img {
+        width: 100%;
+        height: 180px;
+        object-fit: cover;
+    }
+    
+    .card-body {
+        padding: 15px;
+    }
+    
+    .card-title {
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+    }
+    
+    .form-group {
+        margin-bottom: 15px;
+    }
+    
+    .form-control {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
     }
 </style>
 {% endblock %}

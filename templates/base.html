@@ -350,11 +350,8 @@
                     <li><a href="{{ url_for('menu') }}">Menu</a></li>
                     <li><a href="{{ url_for('order') }}">Order</a></li>
                     {% if 'username' in session %}
-                        <li><a href="{{ url_for('order_history') }}">My Orders</a></li>
-                        {% if session['username'] == 'admin' %}
-                            <li><a href="{{ url_for('admin') }}">Admin</a></li>
-                        {% endif %}
-                    {% endif %}
+                      <a href="{{ url_for('order_history') }}">Order History</a>
+                   {% endif %}
                 </ul>
             </nav>
             <div class="auth-buttons">

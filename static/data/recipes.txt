@@ -1,7 +1,7 @@
-chicken mushroom : mushroom,chicken,onion,tomato,cheese,chilli
-margherita : tomato,mozzarella,garlic,basil
-tuna : tomato,mozzarella,tuna,onion
-pepperoni : tomato,mozzarella,pepperoni
-mushroom : tomato,mozzarella,garlic,mushrooms
-four cheese : tomato,mozzarella,cheddar,parmesan,gorgonzola
-hawaiian : tomato,mozzarella,ham,pineapple
+chicken mushroom:mushroom,chicken,onion,tomato,cheese,chilli
+margherita:mozzarella,garlic,basil
+tuna:tomato,mozzarella,tuna,onion
+pepperoni:tomato,mozzarella,pepperoni
+mushroom:tomato,mozzarella,garlic,mushrooms
+four cheese:tomato,mozzarella,cheddar,parmesan,gorgonzola
+hawaiian:tomato,mozzarella,ham,pineapple

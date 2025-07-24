@@ -2,27 +2,96 @@
 {% block title %}Order History - Presto Pizza{% endblock %}
 
 {% block content %}
-<h1>Your Order History</h1>
-
-{% if orders %}
-<table class="table">
-    <thead>
-        <tr>
-            <th>Date & Time</th>
-            <th>Order Details</th>
-        </tr>
-    </thead>
-    <tbody>
+<div class="history-container">
+    <h1>Your Order History</h1>
+    
+    {% if orders %}
+    <div class="orders-list">
         {% for order in orders %}
-        <tr>
-            <td>{{ order.timestamp }}</td>
-            <td>{{ order.details }}</td>
-        </tr>
+        <div class="order-card">
+            <div class="order-header">
+                <span class="order-date">{{ order.timestamp }}</span>
+                <span class="order-status">Completed</span>
+            </div>
+            <div class="order-details">
+                {{ order.details }}
+            </div>
+        </div>
         {% endfor %}
-    </tbody>
-</table>
-{% else %}
-<p>You haven't placed any orders yet.</p>
-<a href="{{ url_for('order') }}" class="btn">Order Now</a>
-{% endif %}
+    </div>
+    {% else %}
+    <div class="no-orders">
+        <p>You haven't placed any orders yet.</p>
+        <a href="{{ url_for('order') }}" class="btn">Place an Order</a>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+    .history-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    
+    .orders-list {
+        margin-top: 30px;
+    }
+    
+    .order-card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    
+    .order-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #eee;
+    }
+    
+    .order-date {
+        font-weight: 500;
+        color: #333;
+    }
+    
+    .order-status {
+        background: #2ecc71;
+        color: white;
+        padding: 3px 10px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+    }
+    
+    .no-orders {
+        text-align: center;
+        padding: 40px;
+        background: #f9f9f9;
+        border-radius: 8px;
+        margin-top: 30px;
+    }
+    
+    .no-orders p {
+        margin-bottom: 20px;
+        color: #666;
+    }
+    
+    .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        background: #e74c3c;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background 0.3s;
+    }
+    
+    .btn:hover {
+        background: #c0392b;
+    }
+</style>
 {% endblock %}

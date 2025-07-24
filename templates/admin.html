@@ -2,95 +2,116 @@
 {% block title %}Admin Dashboard - Presto Pizza{% endblock %}
 
 {% block content %}
-<h1>Admin Dashboard</h1>
-
-<div class="admin-tabs">
-    <button class="tab-btn active" onclick="openTab('orders')">Orders</button>
-    <button class="tab-btn" onclick="openTab('pizzas')">Pizzas</button>
-    <button class="tab-btn" onclick="openTab('ingredients')">Ingredients</button>
-</div>
-
-<div id="orders" class="tab-content active">
-    <h2>Recent Orders</h2>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Time</th>
-                <th>Customer</th>
-                <th>Order Details</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for order in orders %}
-            <tr>
-                <td>{{ order.timestamp }}</td>
-                <td>{{ order.username }}</td>
-                <td>{{ order.details }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
-
-<div id="pizzas" class="tab-content">
-    <h2>Pizza Menu Management</h2>
-    <a href="{{ url_for('add_pizza') }}" class="btn">Add New Pizza</a>
+<div class="admin-container">
+    <h1>Admin Dashboard</h1>
     
-    <div class="grid" style="margin-top: 20px;">
-        {% for pizza, ingredients in recipes.items() %}
-        <div class="card">
-            <img src="{{ url_for('static', filename='uploads/pizza_' + pizza.lower().replace(' ', '_') + '.jpg') }}" 
-                 alt="{{ pizza }}" class="card-img"
-                 onerror="this.src='{{C:\Users\cindy\Downloads\templates-again\templates-again\static\images\default-pizza..jpg }}'">
-            <div class="card-body">
-                <h3 class="card-title">{{ pizza }}</h3>
-                <p class="card-text">
-                    {% for ingredient in ingredients %}
+    <div class="admin-tabs">
+        <button class="tab-btn active" onclick="openTab('orders')">Orders</button>
+        <button class="tab-btn" onclick="openTab('pizzas')">Pizzas</button>
+        <button class="tab-btn" onclick="openTab('ingredients')">Ingredients</button>
+    </div>
+
+    <div id="orders" class="tab-content active">
+        <h2>All Orders</h2>
+        {% if orders %}
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Date/Time</th>
+                    <th>Customer</th>
+                    <th>Order Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr>
+                    <td>{{ order.timestamp }}</td>
+                    <td>{{ order.username }}</td>
+                    <td>{{ order.details }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="no-data">No orders found.</p>
+        {% endif %}
+    </div>
+
+    <div id="pizzas" class="tab-content">
+        <h2>Pizza Menu Management</h2>
+        <a href="{{ url_for('add_pizza') }}" class="btn">Add New Pizza</a>
+        
+        {% if recipes %}
+        <div class="pizza-grid">
+            {% for pizza_name, ingredients in recipes.items() %}
+            <div class="pizza-card">
+                <img src="{{ url_for('static', filename='uploads/pizza_' + pizza_name.lower().replace(' ', '_') + '.jpg') }}"
+                     alt="{{ pizza_name }}"
+                     class="pizza-image"
+                     >
+                <div class="pizza-info">
+                    <h3>{{ pizza_name }}</h3>
+                    <div class="ingredients">
+                        {% for ingredient in ingredients %}
                         <span class="ingredient-tag">{{ ingredient }}</span>
-                    {% endfor %}
-                </p>
-                <div class="card-actions">
-                    <a href="{{ url_for('edit_pizza', pizza_name=pizza) }}" class="btn">Edit</a>
-                    <form action="{{ url_for('delete_pizza', pizza_name=pizza) }}" method="post" style="display: inline;">
-                        <button type="submit" class="btn" style="background-color: var(--danger-color);" 
-                                onclick="return confirm('Are you sure you want to delete {{ pizza }}?')">Delete</button>
-                    </form>
+                        {% endfor %}
+                    </div>
+                    <div class="pizza-actions">
+                        <a href="{{ url_for('edit_pizza', pizza_name=pizza_name) }}" class="btn btn-edit">Edit</a>
+                        <form action="{{ url_for('delete_pizza', pizza_name=pizza_name) }}" method="post">
+                            <button type="submit" class="btn btn-delete" 
+                                    onclick="return confirm('Are you sure you want to delete {{ pizza_name }}?')">
+                                Delete
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
+            {% endfor %}
         </div>
-        {% endfor %}
+        {% else %}
+        <p class="no-data">No pizzas available.</p>
+        {% endif %}
+    </div>
+
+    <div id="ingredients" class="tab-content">
+        <h2>Ingredients Needed</h2>
+        {% if ingredient_counts %}
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Ingredient</th>
+                    <th>Quantity Needed</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ingredient, quantity in ingredient_counts.items() %}
+                <tr>
+                    <td>{{ ingredient }}</td>
+                    <td>{{ quantity }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="no-data">No ingredient data available.</p>
+        {% endif %}
     </div>
 </div>
 
-<div id="ingredients" class="tab-content">
-    <h2>Ingredients Needed</h2>
-    <p>Based on all current orders</p>
-    
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Ingredient</th>
-                <th>Quantity Needed</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for ingredient, quantity in ingredient_counts.items() %}
-            <tr>
-                <td>{{ ingredient }}</td>
-                <td>{{ quantity }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
-
 <style>
+    .admin-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
     .admin-tabs {
         display: flex;
-        border-bottom: 1px solid #ddd;
-        margin-bottom: 20px;
+        border-bottom: 2px solid #ddd;
+        margin: 20px 0;
     }
-    
+
     .tab-btn {
         padding: 10px 20px;
         background: none;
@@ -98,19 +119,125 @@
         cursor: pointer;
         font-size: 1rem;
         border-bottom: 3px solid transparent;
+        transition: all 0.3s;
     }
-    
+
     .tab-btn.active {
-        border-bottom-color: var(--primary-color);
-        font-weight: 500;
+        border-bottom-color: #e74c3c;
+        font-weight: 600;
     }
-    
+
+    .tab-btn:hover:not(.active) {
+        border-bottom-color: #ccc;
+    }
+
     .tab-content {
         display: none;
+        padding: 20px 0;
     }
-    
+
     .tab-content.active {
         display: block;
+    }
+
+    .admin-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+    }
+
+    .admin-table th, .admin-table td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .admin-table th {
+        background-color: #f5f5f5;
+        font-weight: 600;
+    }
+
+    .no-data {
+        padding: 20px;
+        background: #f9f9f9;
+        border-radius: 5px;
+        text-align: center;
+        color: #666;
+    }
+
+    .pizza-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 20px;
+        margin-top: 20px;
+    }
+
+    .pizza-card {
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .pizza-image {
+        width: 100%;
+        height: 180px;
+        object-fit: cover;
+    }
+
+    .pizza-info {
+        padding: 15px;
+    }
+
+    .pizza-info h3 {
+        margin: 0 0 10px 0;
+        font-size: 1.2rem;
+    }
+
+    .ingredients {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 15px;
+    }
+
+    .ingredient-tag {
+        background: #f0f0f0;
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+    }
+
+    .pizza-actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn {
+        padding: 8px 16px;
+        border-radius: 4px;
+        text-decoration: none;
+        font-size: 0.9rem;
+        cursor: pointer;
+        border: none;
+    }
+
+    .btn-edit {
+        background: #3498db;
+        color: white;
+    }
+
+    .btn-edit:hover {
+        background: #2980b9;
+    }
+
+    .btn-delete {
+        background: #e74c3c;
+        color: white;
+    }
+
+    .btn-delete:hover {
+        background: #c0392b;
     }
 </style>
 
