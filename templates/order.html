@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Order here{% endblock %}
+
+{% block content %}
+<h2>We sell the following pizzas:</h2>
+
+<form method="post" action="/order">
+    
+    <ul>
+        {% for item in pizza_type %}
+            <li>
+                <strong>{{ item }}</strong><br>
+
+                <!-- Pizza size selection -->
+                <label for="size_{{ item }}">Size:</label>
+                <select name="size_{{ item }}" id="size_{{ item }}">
+                    <option value="small">Small</option>
+                    <option value="medium">Medium</option>
+                    <option value="large">Large</option>    
+                </select><br>
+
+                <!-- Quantity input -->
+                <label for="quantity_{{ item }}">Quantity:</label>
+                <input type="number" id="quantity_{{ item }}" name="quantity_{{ item }}" min="1" max="10" step="1" placeholder="Enter a number"><br><br>
+                
+            </li>
+        {% endfor %}
+    </ul>
+     <button>add to cart</button>
+      <a href="/basket">View cart</a>
+    
+
+</form>
+{% endblock %}

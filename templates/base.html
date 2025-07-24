@@ -1,0 +1,20 @@
+<html>
+<head>
+    {% block head %}
+    <title>Python Presto Pizza Co. - {% block title %}{% endblock %}</title>
+    <style type="text/css">
+        body {
+            margin-left: 200px;
+            margin-top: 50px;
+            font-family:Arial, Helvetica, sans-serif;
+        }
+    </style>
+    {% endblock %}
+</head>
+<body>
+    <div id="logo"><img src="/static/logo.png" width="200"></div>
+    <div><a href="/">Homepage</a> - <a href="/menu">Menu</a> - {% if 'username' in session %}Logged in as {{ session.username }} - <a href="/logout">Logout</a></a>{% else %}<a href="/login">Login</a> {% endif %} - <a href="/register">Register</a> -<a href="/order">Order</a> </div><br><br>
+    
+    <div id="content">{% block content %}{% endblock %}</div>
+</body>
+</html>

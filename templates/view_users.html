@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Menu{% endblock %}
+
+{% block content %}
+<h2>We sell the following pizzas:</h2>
+
+<br>
+<a href="{{ url_for('add_pizza') }}">
+    <button>Add New Pizza</button>
+</a>
+
+{% endblock %}

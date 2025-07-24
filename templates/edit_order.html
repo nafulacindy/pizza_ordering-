@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Edit Order for {{ username }}</h2>
+<form method="POST">
+    <input type="text" name="order" value="{{ order }}" required>
+    <input type="submit" value="Save Changes">
+</form>
+{% endblock %}

@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Menu{% endblock %}
+{% block content %}
+    We sell the following pizzas:
+    <ul>
+        {% for item in pizzas %}
+            <li><a href="/menu/{{item}}">{{ item }}</a></li>
+        {% endfor %}
+    </ul>
+{% endblock %}

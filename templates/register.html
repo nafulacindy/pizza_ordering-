@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Register{% endblock %}
+{% block content %}
+Register for an account
+    {% if message %}<b>{{ message }}</b>{% endif %}
+    <form method="post">
+        <p>username: <input type='text' name='username'></p>
+            <p>password: <input type='password' name='password'></p>
+            <p>confirm password: <input type='password' name='confirm_password'></p>
+            <p>email: <input type='email' name='email'></p>
+            <p><input type=submit value="Register"></p>
+            <p>Already have an account? <a href="/login">Login here</a>.</p>
+            
+    </form>
+        
+{% endblock %}

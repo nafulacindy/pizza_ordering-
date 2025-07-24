@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Menu - {{pizza}}{% endblock %}
+{% block content %}
+    This is the page to describe the {{pizza}} pizza.
+    <ul>
+        {% for item in ingredients %}
+            <li>{{ item }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

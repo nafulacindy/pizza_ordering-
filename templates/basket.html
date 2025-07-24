@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Your Basket{% endblock %}
+
+{% block content %}
+<h2>Your Basket</h2>
+
+{% if cart %}
+    <ul>
+        {% for item, quantity in cart.items() %}
+            <li>
+                <strong>{{ item }}</strong>: {{ quantity }}
+            </li>
+        {% endfor %}
+    </ul>
+    <a href="/order">Add more items</a>
+{% else %}
+    <p>Your basket is empty.</p>
+    <a href="/order">Start ordering</a>
+{% endif %}
+
+{% endblock %}

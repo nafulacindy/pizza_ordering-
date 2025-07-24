@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+{% block content %}
+    {% if message %}<b>{{ message }}</b>{% endif %}
+    <form method="post">
+            <p>username: <input type='text' name='username'></p>
+            <p>password: <input type='password' name='password'></p>
+            <p><input type=submit value=Login>
+            <p>Don't have an account? <a href="/register">Register here</a>.</p>
+            
+   </form>
+{% endblock %}
