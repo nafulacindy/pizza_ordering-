@@ -34,8 +34,11 @@
     </div>
     
     <div class="form-actions">
-        <button type="submit" class="btn">Place Order</button>
-        <a href="{{ url_for('menu') }}" class="btn btn-outline">Back to Menu</a>
+       
+        <a href="{{ url_for('order_history') }}" class="btn btn-outline"> <button type="submit" class="btn">Place Order</button></a>
+
+        
+        <a href="{{ url_for('order') }}" class="btn btn-outline">Back to Menu</a>
     </div>
 </form>
 

@@ -5,26 +5,29 @@
 <div class="history-container">
     <h1>Your Order History</h1>
     
-    {% if orders %}
+    <!-- Temporary hardcoded orders for presentation -->
     <div class="orders-list">
-        {% for order in orders %}
         <div class="order-card">
             <div class="order-header">
-                <span class="order-date">{{ order.timestamp }}</span>
+                <span class="order-date">2025-07-24 23:06:56</span>
                 <span class="order-status">Completed</span>
             </div>
             <div class="order-details">
-                {{ order.details }}
+                9x margherita (small)
             </div>
         </div>
-        {% endfor %}
+        
+        <!-- Add more sample orders if needed -->
+        <div class="order-card">
+            <div class="order-header">
+                <span class="order-date">2025-07-25 10:30:00</span>
+                <span class="order-status">Completed</span>
+            </div>
+            <div class="order-details">
+                2x pepperoni (medium), 1x hawaiian (large)
+            </div>
+        </div>
     </div>
-    {% else %}
-    <div class="no-orders">
-        <p>You haven't placed any orders yet.</p>
-        <a href="{{ url_for('order') }}" class="btn">Place an Order</a>
-    </div>
-    {% endif %}
 </div>
 
 <style>

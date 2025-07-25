@@ -6,3 +6,6 @@
 2025-07-24 23:06:56:mustapha:9x margherita (small)
 2025-07-24 23:41:50:admin:6x chicken mushroom (large)
 2025-07-25 10:22:08:admin:6x chicken mushroom (large)
+2025-07-25 11:14:48:joy:1x chicken mushroom (medium), 2x margherita (large), 3x tuna (small)
+2025-07-25 11:21:28:joy:2x margherita (large)
+2025-07-25 11:24:35:tony:2x pepperoni (small), 1x hawaiian (medium)
