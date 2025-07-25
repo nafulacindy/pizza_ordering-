@@ -341,18 +341,25 @@
     <header>
         <div class="container header-container">
             <div class="logo">
-                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Presto Pizza Logo">
-                <h1>Presto <span>Pizza</span></h1>
+                <img src="{{ url_for('static', filename='images/logo1.jpg') }}" alt="Presto Pizza Logo">
+                <h1> F. <span> C. </span> M. </h1>
             </div>
             <nav>
                 <ul>
                     <li><a href="{{ url_for('index') }}">Home</a></li>
-                    <li><a href="{{ url_for('menu') }}">Menu</a></li>
+                  
                     <li><a href="{{ url_for('order') }}">Order</a></li>
                     {% if 'username' in session %}
-                      <a href="{{ url_for('order_history') }}">Order History</a>
+                     <li><a href="{{ url_for('order_history') }}">Order History</a></li>
                    {% endif %}
+
+                  {% if session.username == 'admin' %}
+    <li><a href="{{ url_for('admin') }}">Admin Page</a></li>
+{% endif %}
+
+
                 </ul>
+
             </nav>
             <div class="auth-buttons">
                 {% if 'username' in session %}
@@ -384,19 +391,19 @@
         <div class="container footer-content">
             <div class="footer-section">
                 <h3>About Us</h3>
-                <p>Presto Pizza - Delivering delicious pizzas since 2023. Made with love and the finest ingredients.</p>
+                <p>FCM .Co - Delivering delicious pizzas since 2023. Made with love and the finest ingredients.</p>
             </div>
             <div class="footer-section">
                 <h3>Quick Links</h3>
                 <a href="{{ url_for('index') }}">Home</a>
-                <a href="{{ url_for('menu') }}">Menu</a>
+                
                 <a href="{{ url_for('order') }}">Order Online</a>
             </div>
             <div class="footer-section">
                 <h3>Contact Us</h3>
                 <p><i class="fas fa-map-marker-alt"></i> 123 Pizza Street, Foodville</p>
                 <p><i class="fas fa-phone"></i> (123) 456-7890</p>
-                <p><i class="fas fa-envelope"></i> info@prestopizza.com</p>
+                <p><i class="fas fa-envelope"></i> info@fcm.co.com</p>
                 <div class="social-icons">
                     <a href="#"><i class="fab fa-facebook"></i></a>
                     <a href="#"><i class="fab fa-twitter"></i></a>
@@ -405,7 +412,7 @@
             </div>
         </div>
         <div class="container copyright">
-            <p>&copy; 2023 Presto Pizza. All rights reserved.</p>
+            <p>&copy; 2025 F.C.M. Co . All rights reserved.</p>
         </div>
     </footer>
 
